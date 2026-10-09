@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "microforce_PG_addon",
+  "project_id": "bf166221-dc18-4695-a6e4-38f4d94ed623"
+}
