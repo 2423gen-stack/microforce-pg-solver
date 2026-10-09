@@ -88,11 +88,23 @@
 
 ---
 
-## 5. 販売戦略・導線
-- **販売プラットフォーム**: Lemon Squeezy（またはGumroad）
+## 5. 実機ベンチマーク実証結果（Docker PG16 / 100万行）
+- **対象テーブル**: `orders`（1,000,000 rows）
+- **テストクエリ**: `SELECT * FROM orders WHERE user_id = 42 AND status = 'pending';`
+- **Before（適用前）**:
+  - `Parallel Seq Scan`（33万行フルスキャン）
+  - 実行時間: **23.867 ms**
+- **After（pg_solver_apply 適用後）**:
+  - `Index Scan using idx_orders_user_id_status_opt`
+  - 実行時間: **0.060 ms**
+- **高速化エビデンス**: **約99.7% レイテンシ削減（処理速度 397倍速）**
+
+---
+
+## 6. 販売戦略・納品パッケージ
+- **完成パッケージ**:
+  - `release_packages/pg_solver_trial_linux_x86_64.zip`（72時間時限版 / 無料配布）
+  - `release_packages/pg_solver_pro_linux_x86_64.zip`（無制限Pro版 / Lemon Squeezy販売）
+- **販売プラットフォーム**: Lemon Squeezy
   - 面倒な世界各国の消費税・VAT計算・納税代行（MoR）を完全委託。
-  - 自前LP（microforce.dev）に購入モーダルを埋め込み、製品版zipバイナリを即時ダウンロード配布。
-- **集客・配布動線**:
-  - GitHub Releases / microforce.dev にて「72時間お試し版バイナリ」を無料配布。
-  - Hacker News / Zenn 等での技術記事・ベンチマークエビデンス公開による自然流入。
-  - 試用版の実行ログ・レポート末尾に購入先URLを自然に提示。
+  - microforce.dev LPに購入ボタンを配置し、バイナリを即時ダウンロード配布。
