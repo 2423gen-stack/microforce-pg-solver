@@ -1,0 +1,5 @@
+comment = 'pg_solver: PostgreSQL Autonomous Query Optimizer & Slow-Query Killer'
+default_version = '0.1.0'
+module_pathname = '$libdir/pg_solver'
+relocatable = false
+superuser = true

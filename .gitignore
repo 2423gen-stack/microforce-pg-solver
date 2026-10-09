@@ -1,5 +1,12 @@
+target/
+.env
+*.so
+*.o
+*.a
+.DS_Store
+*.log
 
-# Beads / Dolt files (added by bd init)
-.dolt/
-*.db
-.beads-credential-key
+
+# Added by cargo
+
+/target
