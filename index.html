@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pg_solver — Autonomous PostgreSQL Query Optimizer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', -apple-system, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-sm">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-extrabold text-lg tracking-tight text-slate-900">pg_solver</span>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800 font-semibold border border-cyan-200">v0.1.0</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="#benchmark" class="hover:text-blue-600 transition-colors">Benchmarks</a>
+        <a href="#how-it-works" class="hover:text-blue-600 transition-colors">How It Works</a>
+        <a href="#pricing" class="hover:text-blue-600 transition-colors">Pricing</a>
+        <a href="https://github.com/2423gen-stack" target="_blank" class="hover:text-slate-900 transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" target="_blank" class="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition-all transform active:scale-95">
+          Buy Pro ($99)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="pt-20 pb-16 px-6 text-center max-w-4xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-6">
+      <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+      Autonomous Optimization Powered by Multidimensional Geometric Solver
+    </div>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15] mb-6">
+      Stop Slow Queries in Seconds.<br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">Autonomous PostgreSQL Extension.</span>
+    </h1>
+    <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+      Plug-and-play extension that autonomously diagnoses sequential scan hotspots and applies global optimal index configurations. Zero code rewrites, zero DB downtime.
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" target="_blank" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all text-base flex items-center justify-center gap-2">
+        <span>Get Lifetime License ($99)</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+      <a href="#how-it-works" class="w-full sm:w-auto px-6 py-3.5 rounded-xl font-semibold text-slate-700 bg-white border border-slate-300 hover:bg-slate-100 transition-all text-base">
+        View 3-Step Setup
+      </a>
+    </div>
+
+    <!-- Live Evidence Callout -->
+    <div class="mt-12 p-4 rounded-xl bg-blue-50/80 border border-blue-200 text-left flex items-start gap-3.5 max-w-2xl mx-auto shadow-xs">
+      <div class="p-1.5 bg-blue-600 rounded-lg text-white shrink-0 mt-0.5">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-mono">
+        <strong class="font-bold text-slate-900">Proven Real-World Benchmark:</strong> On a table with 1,000,000 records, execution latency dropped from <strong class="text-red-600 font-bold">23.867 ms</strong> (Parallel Seq Scan) to <strong class="text-emerald-600 font-bold">0.060 ms</strong> (Index Scan) — <span class="bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">99.7% Latency Cut (397x Faster!)</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- Benchmark Section (DigitalOcean Clean Style) -->
+  <section id="benchmark" class="py-16 px-6 bg-white border-y border-slate-200">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Quantitative Benchmark & Speedup</h2>
+        <p class="text-slate-600 text-sm sm:text-base">Measured on real Docker PostgreSQL 16 instances with 1M synthetic records.</p>
+      </div>
+
+      <!-- Comparison Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <!-- Before Card -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-red-100 text-red-700 uppercase tracking-wide">Before Optimization</span>
+            <span class="text-xs text-slate-500 font-mono">Parallel Seq Scan</span>
+          </div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-mono mb-2">23.867 <span class="text-sm font-normal text-slate-500">ms</span></div>
+          <p class="text-xs text-slate-600 mb-4">Scanning 333,333 rows per worker, pinning CPU cores at 100%.</p>
+          <div class="p-3 bg-slate-900 text-slate-300 rounded-lg text-xs font-mono overflow-x-auto">
+            -> Parallel Seq Scan on orders (cost=0.00..14403.00)<br>
+            &nbsp;&nbsp;&nbsp;Rows Removed by Filter: 333333<br>
+            &nbsp;&nbsp;&nbsp;Execution Time: 23.867 ms
+          </div>
+        </div>
+
+        <!-- After Card -->
+        <div class="p-6 rounded-2xl bg-cyan-50/50 border border-cyan-200 relative overflow-hidden">
+          <div class="absolute top-0 right-0 transform translate-x-6 -translate-y-6 w-24 h-24 bg-cyan-400/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-700 uppercase tracking-wide">After pg_solver_apply()</span>
+            <span class="text-xs text-emerald-600 font-bold font-mono">397x Speedup</span>
+          </div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-emerald-600 font-mono mb-2">0.060 <span class="text-sm font-normal text-slate-500">ms</span></div>
+          <p class="text-xs text-slate-600 mb-4">Direct index traversal, zero CPU lock, instant buffer read.</p>
+          <div class="p-3 bg-slate-900 text-cyan-300 rounded-lg text-xs font-mono overflow-x-auto">
+            -> Index Scan using idx_orders_user_id_status_opt<br>
+            &nbsp;&nbsp;&nbsp;(cost=0.42..12.46 rows=2)<br>
+            &nbsp;&nbsp;&nbsp;Execution Time: 0.060 ms
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature Grid (Why It Outperforms Manual Tuning) -->
+      <div class="bg-slate-900 text-white rounded-2xl p-8 sm:p-10 shadow-lg">
+        <h3 class="text-lg sm:text-xl font-bold tracking-tight mb-6 flex items-center gap-2.5">
+          <span class="w-3 h-3 rounded-full bg-cyan-400"></span>
+          Why Manual Indexing Fails Where pg_solver Excels
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+          <div>
+            <h4 class="font-bold text-cyan-400 font-mono mb-2">01. No Index Explosion</h4>
+            <p class="text-slate-400 text-xs leading-relaxed">Humans add composite indexes blindly, crippling INSERT/UPDATE speed and exhausting shared buffer memory. pg_solver finds the exact minimal set.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-cyan-400 font-mono mb-2">02. Geometric Global Solvers</h4>
+            <p class="text-slate-400 text-xs leading-relaxed">Projects full query workloads onto convex constraint spaces (POCS). Solves optimal covering configurations in milliseconds, bypassing local heuristic traps.</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-cyan-400 font-mono mb-2">03. 100% Air-Gapped & Safe</h4>
+            <p class="text-slate-400 text-xs leading-relaxed">Unlike SaaS APMs, zero telemetry or query text ever leaves your server. All indexes created with CONCURRENTLY to prevent locking production tables.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works (3 Steps) -->
+  <section id="how-it-works" class="py-16 px-6 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Install in 3 Minutes. Zero Downtime.</h2>
+      <p class="text-slate-600 text-sm">Standard PostgreSQL extension protocol. Drop the binary and run one command.</p>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Step 1 -->
+      <div class="p-6 bg-white rounded-xl border border-slate-200 shadow-xs flex items-start gap-4">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-mono font-bold flex items-center justify-center shrink-0">1</div>
+        <div class="flex-1">
+          <h3 class="font-bold text-slate-900 text-base mb-1">Place the compiled binary (.so)</h3>
+          <p class="text-xs text-slate-600 mb-3">Copy the `.so` and control files to your PostgreSQL library directory:</p>
+          <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono overflow-x-auto">sudo cp pg_solver.so $(pg_config --pkglibdir)/
+sudo cp pg_solver.control pg_solver--0.1.0.sql $(pg_config --sharedir)/extension/</pre>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="p-6 bg-white rounded-xl border border-slate-200 shadow-xs flex items-start gap-4">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-mono font-bold flex items-center justify-center shrink-0">2</div>
+        <div class="flex-1">
+          <h3 class="font-bold text-slate-900 text-base mb-1">Enable Extension & Review Report</h3>
+          <p class="text-xs text-slate-600 mb-3">Activate the extension and view full before/after recommendations without changing anything:</p>
+          <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono overflow-x-auto">CREATE EXTENSION pg_solver;
+SELECT pg_solver_report();</pre>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="p-6 bg-white rounded-xl border border-slate-200 shadow-xs flex items-start gap-4">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-mono font-bold flex items-center justify-center shrink-0">3</div>
+        <div class="flex-1">
+          <h3 class="font-bold text-slate-900 text-base mb-1">Apply Optimizations Safely</h3>
+          <p class="text-xs text-slate-600 mb-3">One-click background creation with CONCURRENTLY. Revert anytime with `pg_solver_revert()`:</p>
+          <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono overflow-x-auto">SELECT pg_solver_apply();</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Section (Single Clean Lifetime Tier) -->
+  <section id="pricing" class="py-16 px-6 bg-white border-t border-slate-200">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">Simple, Transparent Pricing</h2>
+      <p class="text-slate-600 text-sm mb-12">No monthly subscriptions. No seat licenses. Deploy forever on your PostgreSQL clusters.</p>
+
+      <div class="max-w-md mx-auto p-8 rounded-2xl bg-slate-50 border-2 border-blue-600 shadow-lg relative text-left">
+        <div class="absolute -top-3.5 right-6 px-3 py-1 bg-blue-600 text-white font-mono font-bold text-xs rounded-full uppercase tracking-wider">
+          Launch Promo (Save 50%)
+        </div>
+        <h3 class="text-xl font-extrabold text-slate-900 mb-2">Professional Edition</h3>
+        <p class="text-xs text-slate-600 mb-6">Complete standalone PostgreSQL extension package with lifetime usage rights.</p>
+
+        <div class="flex items-baseline gap-2 mb-6">
+          <span class="text-4xl font-extrabold text-slate-900 font-mono">$99</span>
+          <span class="text-sm font-semibold text-slate-400 line-through font-mono">$199</span>
+          <span class="text-xs text-slate-500 font-mono">one-time payment</span>
+        </div>
+
+        <ul class="space-y-3 text-xs text-slate-700 mb-8">
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Full pg_solver.so</strong> (PostgreSQL 16 support)</span>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Unlimited Production Instances</strong></span>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Zero Expiration / Permanent License</strong></span>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Visual Diff & Recommendation Engine</strong></span>
+          </li>
+          <li class="flex items-center gap-2">
+            <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+            <span><strong>Instant Download & Free Updates</strong></span>
+          </li>
+        </ul>
+
+        <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" target="_blank" class="w-full py-3.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2">
+          <span>Buy Pro Now — $99</span>
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </a>
+        <p class="text-[11px] text-center text-slate-400 mt-3 font-mono">Secure global checkout via Stripe (Cards, Apple Pay, Google Pay)</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-10 px-6 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500 font-mono">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-700">pg_solver</span>
+        <span>— Developed by Gen Nishizumi (西住玄)</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" class="hover:text-blue-600">Buy Pro License</a>
+        <a href="https://microforce.dev" class="hover:text-blue-600">microforce.dev</a>
+        <a href="mailto:support@microforce.dev" class="hover:text-blue-600">Contact Support</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
