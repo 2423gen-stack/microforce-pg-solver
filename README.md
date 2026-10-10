@@ -60,11 +60,17 @@ SELECT pg_solver_apply();
 | **最適化レポート** | 利用可能（残時間カウントダウン表示） | 利用可能（Professional表示） |
 | **最適化適用** | 利用可能 | 利用可能 |
 | **知財防護** | LTO + Strip済みブラックボックスバイナリ | LTO + Strip済みブラックボックスバイナリ |
-| **価格** | 無料ダウンロード | $99〜$299（Lemon Squeezyにて販売） |
+| **価格** | 無料ダウンロード | $99（[Stripeで購入](https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01)） |
 
 ---
 
-## 4. トラブルシューティング ＆ よくある質問
+## 4. 購入・ライセンス
+製品版（Pro）の永久ライセンスは、以下のStripe公式決済リンクより即時購入可能です：
+
+👉 **[Buy pg_solver Pro ($99.00 USD) - Stripe Checkout](https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01)**
+- 世界各国の税務コンプライアンス（MoR）対応
+- クレジットカード / Apple Pay / Google Pay 対応
+- 購入完了後、製品版バイナリのダウンロードリンクが即時発行されます。
 
 - **Q: 本番データベースが停止することはありますか？**
   - A: ありません。推奨インデックスはすべて `CREATE INDEX CONCURRENTLY` で発行されるため、テーブルの読み書きロックを発生させずに安全に作成されます。

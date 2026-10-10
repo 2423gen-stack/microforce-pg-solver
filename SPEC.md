@@ -113,6 +113,7 @@
 - **完成パッケージ**:
   - `release_packages/pg_solver_trial_linux_x86_64.zip`（72時間時限版 / 無料配布）
   - `release_packages/pg_solver_pro_linux_x86_64.zip`（無制限Pro版 / Lemon Squeezy販売）
-- **販売プラットフォーム**: Lemon Squeezy
-  - 面倒な世界各国の消費税・VAT計算・納税代行（MoR）を完全委託。
-  - microforce.dev LPに購入ボタンを配置し、バイナリを即時ダウンロード配布。
+- **販売プラットフォーム**: Stripe Managed Payments (Merchant of Record)
+  - 決済URL: **https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01**
+  - 面倒な世界各国の消費税・VAT計算・納税代行（MoR）をStripeが完全代行。
+  - microforce.dev LPやGitHubに購入ボタンを配置し、バイナリを即時ダウンロード配布。
