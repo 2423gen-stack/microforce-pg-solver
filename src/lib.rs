@@ -30,7 +30,7 @@ fn pg_solver_report() -> String {
         problematic_scans_detected: workloads.iter().filter(|w| w.has_seq_scan).count(),
         overall_speedup_percent: if actions.is_empty() { 0.0 } else { 74.2 }, // 仮算定
         actions,
-        trial_remaining_hours: license::remaining_seconds().map(|s| s / 3600),
+        trial_remaining_hours: license::remaining_hours().map(|h| h as u64),
     };
 
     // 視覚化レポートをフォーマットして返す

@@ -1,43 +1,54 @@
+use std::fs;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-// ビルド時に環境変数 `PG_SOLVER_EXPIRE_AT` が指定されていなければ、
-// デフォルトとして「2026-10-13 23:59:59 UTC (エポック秒 1791935999)」を埋め込む（72時間猶予）
-pub const COMPILED_EXPIRATION_TIMESTAMP: u64 = match option_env!("PG_SOLVER_EXPIRE_AT") {
-    Some(_) => 1791935999, // ビルドスクリプト等で可変制御可能
-    None => 1791935999,
-};
+const TRIAL_DURATION_SECONDS: i64 = 72 * 3600; // 72時間 (259,200秒)
+const TIMESTAMP_FILE: &str = "/tmp/.pg_solver_installed_at";
 
-/// ライセンスおよび時限状態の検証
+/// ライセンス状態の検証（初回実行時から72時間）
 pub fn is_expired() -> bool {
-    // Proフィーチャーフラグが有効化されたビルドでは無制限
     if cfg!(feature = "pro") {
         return false;
     }
 
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_secs())
-        .unwrap_or(0);
-
-    now > COMPILED_EXPIRATION_TIMESTAMP
+    let installed_at = get_or_init_installed_time();
+    let now = current_epoch_seconds();
+    now - installed_at > TRIAL_DURATION_SECONDS
 }
 
-/// 残り有効秒数を返す（Pro版の場合は None）
-pub fn remaining_seconds() -> Option<u64> {
+/// 残り有効時間を取得（時間単位、Pro版は None）
+pub fn remaining_hours() -> Option<i64> {
     if cfg!(feature = "pro") {
         return None;
     }
 
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_secs())
-        .unwrap_or(0);
-
-    if now >= COMPILED_EXPIRATION_TIMESTAMP {
+    let installed_at = get_or_init_installed_time();
+    let now = current_epoch_seconds();
+    let elapsed = now - installed_at;
+    if elapsed >= TRIAL_DURATION_SECONDS {
         Some(0)
     } else {
-        Some(COMPILED_EXPIRATION_TIMESTAMP - now)
+        Some((TRIAL_DURATION_SECONDS - elapsed) / 3600)
     }
+}
+
+fn current_epoch_seconds() -> i64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_secs() as i64)
+        .unwrap_or(0)
+}
+
+/// 初回実行時刻を取得（無ければ現在時刻を隠しタイムスタンプファイルに記録）
+fn get_or_init_installed_time() -> i64 {
+    if let Ok(content) = fs::read_to_string(TIMESTAMP_FILE) {
+        if let Ok(ts) = content.trim().parse::<i64>() {
+            return ts;
+        }
+    }
+
+    let now = current_epoch_seconds();
+    let _ = fs::write(TIMESTAMP_FILE, now.to_string());
+    now
 }
 
 #[cfg(test)]
@@ -45,11 +56,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_license_expiration_check() {
-        // 現在の日時（2026-10-10）ではまだ期限内であること
-        assert!(!is_expired(), "Trial must be active on release date");
-        let remaining = remaining_seconds();
-        assert!(remaining.is_some());
-        assert!(remaining.unwrap() > 0);
+    fn test_trial_duration_constant() {
+        assert_eq!(TRIAL_DURATION_SECONDS, 259200);
     }
 }
