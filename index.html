@@ -291,16 +291,35 @@ SELECT pg_solver_report();</pre>
   </section>
 
   <!-- Footer -->
-  <footer class="py-10 px-6 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500 font-mono">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-slate-700">pg_solver</span>
-        <span>— Developed by Gen Nishizumi (西住玄)</span>
+  <footer class="py-12 px-6 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 font-mono">
+    <div class="max-w-6xl mx-auto space-y-8">
+
+      <!-- Legal Notice & Merchant Info -->
+      <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-xs text-slate-600 space-y-3 font-sans">
+        <h4 class="font-bold text-slate-900 text-xs tracking-wider uppercase font-mono">Legal Notice &amp; Merchant Information</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8 text-xs">
+          <div><span class="text-slate-400">Operator / Merchant:</span> Microforce Project (Gen Nishizumi)</div>
+          <div><span class="text-slate-400">Email:</span> support@microforce.dev</div>
+          <div><span class="text-slate-400">Payment Methods:</span> Credit Cards, Apple Pay, Google Pay (Stripe Managed Payments)</div>
+          <div><span class="text-slate-400">Refund Policy:</span> Due to the immediate delivery of digital software, purchases are non-refundable once downloaded. Please evaluate with our 72-Hour Free Trial first.</div>
+        </div>
       </div>
-      <div class="flex items-center gap-6">
-        <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" class="hover:text-blue-600">Buy Pro License</a>
-        <a href="https://microforce.dev" class="hover:text-blue-600">microforce.dev</a>
-        <a href="mailto:support@microforce.dev" class="hover:text-blue-600">Contact Support</a>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200/60">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-slate-700">pg_solver</span>
+          <span>— Developed by Gen Nishizumi (西住玄)</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="release_packages/pg_solver_trial_linux_x86_64.zip" download class="hover:text-blue-600">Download Trial</a>
+          <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" class="hover:text-blue-600">Buy Pro License</a>
+          <a href="https://microforce.dev" class="hover:text-blue-600">microforce.dev</a>
+          <a href="mailto:support@microforce.dev" class="hover:text-blue-600">Contact Support</a>
+        </div>
+      </div>
+
+      <div class="text-center text-[11px] text-slate-400">
+        &copy; 2026 Microforce Project. Built with Rust &amp; pgrx. All rights reserved.
       </div>
     </div>
   </footer>

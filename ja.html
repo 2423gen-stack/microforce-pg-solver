@@ -58,11 +58,11 @@
       多次元幾何学最適化ソルバー搭載・自律型PostgreSQL拡張
     </div>
     <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15] mb-6">
-      スロークエリを秒速で根絶。<br>
-      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">ポン付け自律型アドオン。</span>
+      スロークエリを秒速で根絶<br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">ポン付け自律型アドオン</span>
     </h1>
     <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
-      全表走査（Seq Scan）のボトルネックを自動検知し、幾何学ソルバーが大域的最適インデックス構成を一撃算出。SQLの書き換えゼロ、本番DBの停止ゼロ。
+      全表走査（Seq Scan）のボトルネックを自動検知し、幾何学ソルバーが大域的最適インデックス構成を一撃算出。SQLの書き換えゼロ、本番DBの停止ゼロ
     </p>
     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
       <a href="release_packages/pg_solver_trial_linux_x86_64.zip" download class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-slate-800 bg-white border-2 border-slate-300 hover:border-slate-400 hover:bg-slate-50 shadow-sm transition-all text-base flex items-center justify-center gap-2">
@@ -292,17 +292,35 @@ SELECT pg_solver_report();</pre>
   </section>
 
   <!-- Footer -->
-  <footer class="py-10 px-6 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500 font-mono">
-    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="font-bold text-slate-700">pg_solver</span>
-        <span>— Developed by Gen Nishizumi (西住玄)</span>
+  <footer class="py-12 px-6 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 font-mono">
+    <div class="max-w-6xl mx-auto space-y-8">
+      
+      <!-- 特定商取引法に基づく表記・運営者情報カード -->
+      <div class="p-6 rounded-xl bg-white border border-slate-200 shadow-xs text-slate-600 space-y-3 font-sans">
+        <h4 class="font-bold text-slate-900 text-xs tracking-wider uppercase font-mono">特定商取引法に基づく表記・運営者情報</h4>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 gap-x-8 text-xs">
+          <div><span class="text-slate-400">事業者・運営責任者:</span> Microforce Project (西住 玄)</div>
+          <div><span class="text-slate-400">Email:</span> support@microforce.dev</div>
+          <div><span class="text-slate-400">支払方法:</span> クレジットカード (Stripe Managed Payments)</div>
+          <div><span class="text-slate-400">返金・キャンセル:</span> デジタルソフトウェアの即時提供特性上、ダウンロード後の返金は致しかねます（72時間無料お試し版をご活用ください）。</div>
+        </div>
       </div>
-      <div class="flex items-center gap-6">
-        <a href="release_packages/pg_solver_trial_linux_x86_64.zip" download class="hover:text-blue-600">お試し版ダウンロード</a>
-        <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" class="hover:text-blue-600">製品版ライセンス購入</a>
-        <a href="https://microforce.dev" class="hover:text-blue-600">microforce.dev</a>
-        <a href="mailto:support@microforce.dev" class="hover:text-blue-600">サポート窓口</a>
+
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200/60">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-slate-700">pg_solver</span>
+          <span>— Developed by Gen Nishizumi (西住玄)</span>
+        </div>
+        <div class="flex items-center gap-6">
+          <a href="release_packages/pg_solver_trial_linux_x86_64.zip" download class="hover:text-blue-600">お試し版ダウンロード</a>
+          <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" class="hover:text-blue-600">製品版ライセンス購入</a>
+          <a href="https://microforce.dev" class="hover:text-blue-600">microforce.dev</a>
+          <a href="mailto:support@microforce.dev" class="hover:text-blue-600">サポート窓口</a>
+        </div>
+      </div>
+
+      <div class="text-center text-[11px] text-slate-400">
+        &copy; 2026 Microforce Project. Built with Rust &amp; pgrx. All rights reserved.
       </div>
     </div>
   </footer>
