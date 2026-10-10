@@ -114,3 +114,44 @@ Postgres標準の遺伝的アルゴリズム（GEQO）ではなく、制約条�
 クレジットカード登録や会員登録なしで、ローカルや検証環境（Docker）で72時間試せるトライアルZIPを配備しています。
 * サイト: https://pg.microforce.dev/ja.html
 * 試用版DL: https://dl.microforce.dev/downloads/pg_solver_trial_linux_x86_64.zip
+
+---
+
+## 3. X (Twitter) 投稿用ローテーション英語テンプレート（280文字以内・コピペ用）
+
+### パターン1：安全性・Dry-run重視（現場DBAの安心・胃痛を救う）
+```text
+The biggest fear when tuning production Postgres:
+"Will this tool break my cluster?"
+
+pg_solver is dry-run first.
+Run `SELECT * FROM pg_solver_report();` to simulate latency drops and review CONCURRENT index SQL in your terminal.
+
+Free 72h trial:
+https://pg.microforce.dev/
+```
+
+### パターン2：アルゴリズム・技術的優位性（GEQOとの違い・POCS幾何学）
+```text
+Why pg_solver beats Postgres GEQO:
+
+Genetic algorithms search query spaces randomly.
+pg_solver maps filter boundaries & join selectivity into a convex hypervolume, solving global optimal index sets in <15µs in Rust.
+
+Docs & Trial:
+https://pg.microforce.dev/
+```
+
+### パターン3：シンプル＆ベンチマーク直球（1M行 23.8ms ➔ 0.06ms）
+```text
+1M rows query tuning on PostgreSQL 16:
+- Sequential scan: 23.86 ms
+- With pg_solver: 0.06 ms (400x speedup)
+
+Plug & play via `CREATE EXTENSION pg_solver;`.
+Zero table lock, zero code rewrites.
+
+Free 72h trial binary:
+https://pg.microforce.dev/
+```
+
