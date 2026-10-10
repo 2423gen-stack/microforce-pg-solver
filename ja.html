@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>pg_solver — 自律型PostgreSQLクエリオプティマイザ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', 'Noto Sans JP', -apple-system, sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-sm">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="font-extrabold text-lg tracking-tight text-slate-900">pg_solver</span>
+          <span class="text-xs font-mono px-2 py-0.5 rounded-full bg-cyan-100 text-cyan-800 font-semibold border border-cyan-200">v0.1.0</span>
+        </div>
+      </div>
+      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-slate-600">
+        <a href="#benchmark" class="hover:text-blue-600 transition-colors">ベンチマーク</a>
+        <a href="#how-it-works" class="hover:text-blue-600 transition-colors">導入方法</a>
+        <a href="#pricing" class="hover:text-blue-600 transition-colors">料金・お試し版</a>
+        <a href="https://github.com/2423gen-stack" target="_blank" class="hover:text-slate-900 transition-colors flex items-center gap-1.5">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <!-- 言語切替 -->
+        <div class="flex items-center text-xs font-mono border border-slate-200 rounded-lg p-0.5 bg-slate-100">
+          <span class="px-2 py-1 bg-white font-bold text-blue-600 rounded shadow-xs">JA</span>
+          <a href="index.html" class="px-2 py-1 text-slate-500 hover:text-slate-900 rounded transition-colors">EN</a>
+        </div>
+        <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" target="_blank" class="px-4 py-2 rounded-lg text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-sm transition-all transform active:scale-95">
+          製品版を購入 ($99)
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="pt-20 pb-16 px-6 text-center max-w-4xl mx-auto">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-semibold mb-6">
+      <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+      多次元幾何学最適化ソルバー搭載・自律型PostgreSQL拡張
+    </div>
+    <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15] mb-6">
+      スロークエリを秒速で根絶。<br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">ポン付け自律型アドオン。</span>
+    </h1>
+    <p class="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed">
+      全表走査（Seq Scan）のボトルネックを自動検知し、幾何学ソルバーが大域的最適インデックス構成を一撃算出。SQLの書き換えゼロ、本番DBの停止ゼロ。
+    </p>
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="release_packages/pg_solver_trial_linux_x86_64.zip" download class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-slate-800 bg-white border-2 border-slate-300 hover:border-slate-400 hover:bg-slate-50 shadow-sm transition-all text-base flex items-center justify-center gap-2">
+        <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        <span>無料お試し版をダウンロード (72h)</span>
+      </a>
+      <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" target="_blank" class="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all text-base flex items-center justify-center gap-2">
+        <span>製品版を購入 ($99 / 永久ライセンス)</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+      </a>
+    </div>
+
+    <!-- 実機エビデンスコールアウト -->
+    <div class="mt-12 p-4 rounded-xl bg-blue-50/80 border border-blue-200 text-left flex items-start gap-3.5 max-w-2xl mx-auto shadow-xs">
+      <div class="p-1.5 bg-blue-600 rounded-lg text-white shrink-0 mt-0.5">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-mono">
+        <strong class="font-bold text-slate-900">実機100万行ベンチマーク結果:</strong> 実行レイテンシが <strong class="text-red-600 font-bold">23.867 ms</strong> (全表走査) から <strong class="text-emerald-600 font-bold">0.060 ms</strong> (インデックス走査) へ激減 — <span class="bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded">99.7% レイテンシ削減 (397倍速！)</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ベンチマークセクション (DigitalOcean風) -->
+  <section id="benchmark" class="py-16 px-6 bg-white border-y border-slate-200">
+    <div class="max-w-5xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">定量的ベンチマーク ＆ 性能改善エビデンス</h2>
+        <p class="text-slate-600 text-sm sm:text-base">Docker上のPostgreSQL 16実環境（100万行合成データ）にて実測検証済み。</p>
+      </div>
+
+      <!-- Before / After カード -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+        <!-- Before -->
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200">
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-red-100 text-red-700 uppercase tracking-wide">最適化前 (Before)</span>
+            <span class="text-xs text-slate-500 font-mono">Parallel Seq Scan</span>
+          </div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-slate-900 font-mono mb-2">23.867 <span class="text-sm font-normal text-slate-500">ms</span></div>
+          <p class="text-xs text-slate-600 mb-4">ワーカー毎に33万行を全走査。CPU使用率を100%に張り付かせる元凶。</p>
+          <div class="p-3 bg-slate-900 text-slate-300 rounded-lg text-xs font-mono overflow-x-auto">
+            -> Parallel Seq Scan on orders (cost=0.00..14403.00)<br>
+            &nbsp;&nbsp;&nbsp;Rows Removed by Filter: 333333<br>
+            &nbsp;&nbsp;&nbsp;Execution Time: 23.867 ms
+          </div>
+        </div>
+
+        <!-- After -->
+        <div class="p-6 rounded-2xl bg-cyan-50/50 border border-cyan-200 relative overflow-hidden">
+          <div class="absolute top-0 right-0 transform translate-x-6 -translate-y-6 w-24 h-24 bg-cyan-400/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between mb-4">
+            <span class="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-700 uppercase tracking-wide">適用後 (After)</span>
+            <span class="text-xs text-emerald-600 font-bold font-mono">397倍 高速化</span>
+          </div>
+          <div class="text-3xl sm:text-4xl font-extrabold text-emerald-600 font-mono mb-2">0.060 <span class="text-sm font-normal text-slate-500">ms</span></div>
+          <p class="text-xs text-slate-600 mb-4">インデックスを直接走査。CPUロックなし、ナノ秒バッファ参照。</p>
+          <div class="p-3 bg-slate-900 text-cyan-300 rounded-lg text-xs font-mono overflow-x-auto">
+            -> Index Scan using idx_orders_user_id_status_opt<br>
+            &nbsp;&nbsp;&nbsp;(cost=0.42..12.46 rows=2)<br>
+            &nbsp;&nbsp;&nbsp;Execution Time: 0.060 ms
+          </div>
+        </div>
+      </div>
+
+      <!-- なぜ人間の手動チューニングに圧勝するのか -->
+      <div class="bg-slate-900 text-white rounded-2xl p-8 sm:p-10 shadow-lg">
+        <h3 class="text-lg sm:text-xl font-bold tracking-tight mb-6 flex items-center gap-2.5">
+          <span class="w-3 h-3 rounded-full bg-cyan-400"></span>
+          なぜ人間の勘によるインデックス設計は破綻するのか？
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+          <div>
+            <h4 class="font-bold text-cyan-400 font-mono mb-2">01. インデックス爆発の防止</h4>
+            <p class="text-slate-400 text-xs leading-relaxed">人間は遅いクエリごとに勘で複合インデックスを貼り散らかし、INSERT/UPDATEを激重にしメモリを浪費します。pg_solverは最小限のインデックス集合だけを特定します。</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-cyan-400 font-mono mb-2">02. 幾何学大域最適化 (POCS)</h4>
+            <p class="text-slate-400 text-xs leading-relaxed">ワークロード全体を多次元凸制約空間に射影。局所解にハマるヒューリスティックを回避し、ミリ秒でシステム全体にとっての最適解を算出します。</p>
+          </div>
+          <div>
+            <h4 class="font-bold text-cyan-400 font-mono mb-2">03. 完全エアギャップ ＆ 無停止</h4>
+            <p class="text-slate-400 text-xs leading-relaxed">外部SaaSと異なり、クエリ内容や社内データは一切外部送信されません（通信ゼロ）。インデックス作成は CONCURRENTLY で本番ロックを発生させません。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 導入方法 (3ステップ) -->
+  <section id="how-it-works" class="py-16 px-6 max-w-4xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mb-3">わずか3分で導入完了。DB停止ゼロ。</h2>
+      <p class="text-slate-600 text-sm">標準PostgreSQL Extensionプロトコル準拠。ファイルを置いてコマンドを叩くだけ。</p>
+    </div>
+
+    <div class="space-y-6">
+      <!-- Step 1 -->
+      <div class="p-6 bg-white rounded-xl border border-slate-200 shadow-xs flex items-start gap-4">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-mono font-bold flex items-center justify-center shrink-0">1</div>
+        <div class="flex-1">
+          <h3 class="font-bold text-slate-900 text-base mb-1">共有ライブラリ（.so）を配置</h3>
+          <p class="text-xs text-slate-600 mb-3">PostgreSQLのライブラリおよび拡張ディレクトリにファイルをコピーします：</p>
+          <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono overflow-x-auto">sudo cp pg_solver.so $(pg_config --pkglibdir)/
+sudo cp pg_solver.control pg_solver--0.1.0.sql $(pg_config --sharedir)/extension/</pre>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="p-6 bg-white rounded-xl border border-slate-200 shadow-xs flex items-start gap-4">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-mono font-bold flex items-center justify-center shrink-0">2</div>
+        <div class="flex-1">
+          <h3 class="font-bold text-slate-900 text-base mb-1">拡張を有効化 ＆ 診断レポート確認</h3>
+          <p class="text-xs text-slate-600 mb-3">DBに手を加える前に、まずは現状のボトルネックと改善予測レポートを出力します：</p>
+          <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono overflow-x-auto">CREATE EXTENSION pg_solver;
+SELECT pg_solver_report();</pre>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="p-6 bg-white rounded-xl border border-slate-200 shadow-xs flex items-start gap-4">
+        <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 font-mono font-bold flex items-center justify-center shrink-0">3</div>
+        <div class="flex-1">
+          <h3 class="font-bold text-slate-900 text-base mb-1">ワンタッチで最適化を適用</h3>
+          <p class="text-xs text-slate-600 mb-3">CONCURRENTLY で無停止適用。いつでも `pg_solver_revert()` で安全に元に戻せます：</p>
+          <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono overflow-x-auto">SELECT pg_solver_apply();</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 料金プラン・お試し版 2カラムカードセクション -->
+  <section id="pricing" class="py-16 px-6 bg-white border-t border-slate-200">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight mb-3">明瞭な料金プラン ＆ 無料お試し</h2>
+      <p class="text-slate-600 text-sm mb-12">月額サブスクなし、シート課金なし。まずは72時間無料でお試しください。</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 text-left max-w-4xl mx-auto">
+        <!-- お試し版カード -->
+        <div class="p-8 rounded-2xl bg-white border-2 border-slate-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="inline-block px-3 py-1 bg-slate-100 text-slate-700 font-mono font-bold text-xs rounded-full uppercase tracking-wider mb-4">
+              Free Trial
+            </div>
+            <h3 class="text-2xl font-extrabold text-slate-900 mb-2">72時間 お試し版</h3>
+            <p class="text-xs text-slate-600 mb-6">インストールから72時間、全機能をフルスペックでお試しいただけます。</p>
+
+            <div class="flex items-baseline gap-2 mb-6">
+              <span class="text-4xl font-extrabold text-slate-900 font-mono">¥0</span>
+              <span class="text-xs text-slate-500 font-mono">登録不要・即時ダウンロード</span>
+            </div>
+
+            <ul class="space-y-3 text-xs text-slate-700 mb-8">
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>72時間のフル機能評価</strong> (残時間カウントダウン表示)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>Before / After 視覚化レポート出力</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>ワンタッチ適用 ＆ ロールバック機能</strong></span>
+              </li>
+              <li class="flex items-center gap-2 text-slate-400">
+                <svg class="w-4 h-4 text-slate-300 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <span>72時間経過後は自動停止（データ影響なし）</span>
+              </li>
+            </ul>
+          </div>
+
+          <a href="release_packages/pg_solver_trial_linux_x86_64.zip" download class="w-full py-3.5 rounded-xl font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 border border-slate-300 transition-all text-sm flex items-center justify-center gap-2">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            <span>お試し版 (Trial) をダウンロード (.zip)</span>
+          </a>
+        </div>
+
+        <!-- 製品版（Pro）カード -->
+        <div class="p-8 rounded-2xl bg-slate-50 border-2 border-blue-600 shadow-lg relative flex flex-col justify-between">
+          <div class="absolute -top-3.5 right-6 px-3 py-1 bg-blue-600 text-white font-mono font-bold text-xs rounded-full uppercase tracking-wider">
+            ローンチ特価 (50% OFF)
+          </div>
+          <div>
+            <div class="inline-block px-3 py-1 bg-blue-100 text-blue-800 font-mono font-bold text-xs rounded-full uppercase tracking-wider mb-4">
+              Professional
+            </div>
+            <h3 class="text-2xl font-extrabold text-slate-900 mb-2">製品版 (Pro)</h3>
+            <p class="text-xs text-slate-600 mb-6">期限ロックなし。自社クラスタで永久に使い倒せるフルパッケージ。</p>
+
+            <div class="flex items-baseline gap-2 mb-6">
+              <span class="text-4xl font-extrabold text-slate-900 font-mono">$99</span>
+              <span class="text-sm font-semibold text-slate-400 line-through font-mono">$199</span>
+              <span class="text-xs text-slate-500 font-mono">買い切り・永久ライセンス</span>
+            </div>
+
+            <ul class="space-y-3 text-xs text-slate-700 mb-8">
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>完全版 pg_solver.so</strong> (PostgreSQL 16対応)</span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>利用期限なし・永久利用ライセンス</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>商用本番インスタンス数 無制限</strong></span>
+              </li>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                <span><strong>即時ダウンロード ＆ 将来のアップデート提供</strong></span>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" target="_blank" class="w-full py-3.5 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-md hover:shadow-lg transition-all text-sm flex items-center justify-center gap-2">
+              <span>製品版を購入 — $99</span>
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </a>
+            <p class="text-[11px] text-center text-slate-400 mt-3 font-mono">Stripe世界共通決済 (カード, Apple Pay, Google Pay)</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-10 px-6 bg-slate-50 border-t border-slate-200 text-center text-xs text-slate-500 font-mono">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-700">pg_solver</span>
+        <span>— Developed by Gen Nishizumi (西住玄)</span>
+      </div>
+      <div class="flex items-center gap-6">
+        <a href="release_packages/pg_solver_trial_linux_x86_64.zip" download class="hover:text-blue-600">お試し版ダウンロード</a>
+        <a href="https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01" class="hover:text-blue-600">製品版ライセンス購入</a>
+        <a href="https://microforce.dev" class="hover:text-blue-600">microforce.dev</a>
+        <a href="mailto:support@microforce.dev" class="hover:text-blue-600">サポート窓口</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
