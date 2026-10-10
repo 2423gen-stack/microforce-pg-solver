@@ -60,7 +60,10 @@ SELECT pg_solver_apply();
 | **最適化レポート** | 利用可能（残時間カウントダウン表示） | 利用可能（Professional表示） |
 | **最適化適用** | 利用可能 | 利用可能 |
 | **知財防護** | LTO + Strip済みブラックボックスバイナリ | LTO + Strip済みブラックボックスバイナリ |
-| **価格** | 無料ダウンロード | $99（[Stripeで購入](https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01)） |
+| **価格** | [無料ダウンロード（72h Trial .zip）](https://dl.microforce.dev/downloads/pg_solver_trial_linux_x86_64.zip) | $99（[Stripeで購入](https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01)） |
+
+👉 **[72時間無料お試し版（Linux x86_64 / PG16）を直接ダウンロード](https://dl.microforce.dev/downloads/pg_solver_trial_linux_x86_64.zip)**
+*(登録不要・クレジットカード不要・解凍して配置するだけで即使えます)*
 
 ---
 
