@@ -1,5 +1,79 @@
 # pg_solver (PostgreSQL Autonomous Query Optimizer)
 
+[ English | [日本語](#日本語ドキュメント) ]
+
+Autonomous PostgreSQL 16 extension powered by a multi-dimensional geometric constraint solver (POCS). It automatically detects slow sequential scans and query bottlenecks, synthesizing globally optimal index sets to minimize overall system latency with minimal index overhead.
+
+* **Website & Docs:** [https://pg.microforce.dev/](https://pg.microforce.dev/)
+* **Free 72h Trial Binary (Linux x86_64, PG16):** [Direct Download .zip](https://dl.microforce.dev/downloads/pg_solver_trial_linux_x86_64.zip) *(No signup, no credit card required)*
+* **Pro Lifetime License ($99.00 USD):** [Buy Pro via Stripe Checkout](https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01)
+
+---
+
+## Key Highlights
+
+- **Plug & Play (Zero Complex Config)**:
+  Drop `.so` and extension files into PostgreSQL directory, then run `CREATE EXTENSION pg_solver;`.
+- **400x Latency Reduction (1M Rows Benchmark)**:
+  - **Before (Sequential Scan)**: `23.867 ms`
+  - **After (Index Scan)**: `0.060 ms` (**~99.7% latency cut / ~397x speedup**)
+- **Dry-Run & Terminal Simulation**:
+  Review latency improvements, algorithmic convergence, and recommended index SQL statements before modifying your production schema.
+- **Zero-Crash Memory Safety**:
+  Engineered in Rust with `pgrx` type safety. Guarantees zero undefined behavior or crash hazards to PostgreSQL core engine.
+- **100% Local & Zero Egress**:
+  No telemetry, no external API calls, completely self-contained. Fully compatible with air-gapped, financial, healthcare, and enterprise VPC environments.
+
+---
+
+## Quick Start (3 Steps)
+
+### Step 1: Install Extension Files
+Extract `pg_solver.zip` and copy files to your PostgreSQL library and shared directory:
+
+```bash
+# Copy shared library
+sudo cp pg_solver.so $(pg_config --pkglibdir)/
+
+# Copy control and SQL files
+sudo cp pg_solver.control pg_solver--0.1.0.sql $(pg_config --sharedir)/extension/
+```
+
+### Step 2: Enable Extension
+Connect to your PostgreSQL database and enable `pg_solver`:
+
+```sql
+CREATE EXTENSION pg_solver;
+```
+
+### Step 3: Simulate in Terminal & Safely Apply
+
+```sql
+-- 1. Dry-run: Generate optimization diagnostic report in terminal
+SELECT * FROM pg_solver_report();
+
+-- 2. Apply recommended index optimizations (executed via CONCURRENTLY, zero table locking)
+SELECT pg_solver_apply();
+```
+
+---
+
+## Editions
+
+| Feature | 72-Hour Free Trial | Pro Lifetime License |
+| :--- | :--- | :--- |
+| **Duration** | **72 hours** from first execution | **Unlimited Lifetime** |
+| **Optimization Simulation** | Included (with trial countdown) | Included (Professional tier) |
+| **Index Application** | Included (`CONCURRENTLY`) | Included (`CONCURRENTLY`) |
+| **Binary Protection** | LTO + stripped native binary | LTO + stripped native binary |
+| **Price** | **[Free Download (.zip)](https://dl.microforce.dev/downloads/pg_solver_trial_linux_x86_64.zip)** | **$99.00 USD** ([Stripe Checkout](https://buy.stripe.com/bJeeV6ahC7Qagno3J267S01)) |
+
+---
+---
+
+<a id="日本語ドキュメント"></a>
+# 日本語ドキュメント
+
 PostgreSQLの遅延クエリと全表走査（Seq Scan）を自動検知し、多次元幾何学最適化（POCS）によって**最小のインデックス数でシステム全体のレイテンシを極小化する**自律型PostgreSQLアドオン（Extension）。
 
 ---
