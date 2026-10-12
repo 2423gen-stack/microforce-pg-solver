@@ -190,6 +190,28 @@ SELECT pg_solver_report();</pre>
           <pre class="bg-slate-900 text-slate-200 p-3 rounded-lg text-xs font-mono overflow-x-auto">SELECT pg_solver_apply();</pre>
         </div>
       </div>
+
+      <!-- Docker 60-Second Quickstart Card -->
+      <div class="mt-8 p-6 bg-slate-900 text-white rounded-2xl shadow-lg border border-slate-800">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2.5">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h3 class="font-mono font-bold text-sm text-emerald-400">⚡ 60-Second Quickstart (Docker Container)</h3>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400 bg-slate-800 px-2.5 py-1 rounded">No host install needed</span>
+        </div>
+        <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+          Test the 72-Hour Free Trial directly inside your local Postgres 16 Docker container:
+        </p>
+        <div class="bg-black/60 rounded-xl p-4 font-mono text-xs text-emerald-300 border border-slate-800 space-y-2 overflow-x-auto">
+          <div class="text-slate-500"># 1. Download & extract 72h trial package</div>
+          <div class="text-slate-200 select-all">curl -LO https://dl.microforce.dev/downloads/pg_solver_trial_linux_x86_64.zip &amp;&amp; unzip pg_solver_trial_linux_x86_64.zip -d ./pg_trial</div>
+          <div class="text-slate-500 mt-2"># 2. Copy extension files into running container</div>
+          <div class="text-slate-200 select-all">docker cp ./pg_trial/pg_solver.so my_postgres:/usr/lib/postgresql/16/lib/ &amp;&amp; docker cp ./pg_trial/pg_solver.control my_postgres:/usr/share/postgresql/16/extension/ &amp;&amp; docker cp ./pg_trial/pg_solver--0.1.0.sql my_postgres:/usr/share/postgresql/16/extension/</div>
+          <div class="text-slate-500 mt-2"># 3. Enable extension and run optimization</div>
+          <div class="text-emerald-400 font-bold select-all">docker exec -it my_postgres psql -U postgres -c "CREATE EXTENSION pg_solver; SELECT pg_solver_report();"</div>
+        </div>
+      </div>
     </div>
   </section>
 
